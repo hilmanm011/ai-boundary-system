@@ -1,0 +1,35 @@
+{
+  "name": "ai-boundary-system",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest --run",
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "seed": "tsx src/db/seed.ts"
+  },
+  "keywords": [],
+  "author": "Muhamad Hilman",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "drizzle-orm": "^0.45.2",
+    "express": "^5.2.1",
+    "openai": "^4.x",
+    "pg": "^8.20.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.x",
+    "@types/pg": "^8.x",
+    "drizzle-kit": "^0.31.10",
+    "fast-check": "^4.x",
+    "tsx": "^4.x",
+    "typescript": "^6.0.2",
+    "vitest": "^3.x"
+  }
+}
