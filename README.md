@@ -47,6 +47,7 @@ Create a `.env` file in the project root:
 PORT=3001
 DATABASE_URL="postgresql://user:password@host:port/database"
 OPENROUTER_API_KEY=sk-or-v1-xxxxx
+BASE_URL=
 ```
 
 ### 3. Push database schema
