@@ -1,10 +1,12 @@
-import OpenAI from "openai";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LLMError } from "../types/index.js";
 
-let client: OpenAI | null = null;
+let client: any = null;
 
-function getClient(): OpenAI {
+async function getClient(): Promise<any> {
   if (!client) {
+    const mod = await import("openai");
+    const OpenAI = (mod as any).default ?? mod;
     client = new OpenAI({
       apiKey: process.env.OPENROUTER_API_KEY,
       baseURL: "https://openrouter.ai/api/v1",
@@ -29,22 +31,24 @@ export async function generate(
   prompt: string,
   context: string,
 ): Promise<string> {
-  const messages: OpenAI.ChatCompletionMessageParam[] = [
+  const messages = [
     {
-      role: "system",
+      role: "system" as const,
       content:
         "Only use the provided context to answer. Do not hallucinate or use information outside the given context.",
     },
     {
-      role: "user",
+      role: "user" as const,
       content: `${prompt}\n\nContext:\n${context}`,
     },
   ];
 
+  const openai = await getClient();
+
   for (const model of models) {
     try {
       console.log(`🤖 Trying model: ${model}`);
-      const completion = await getClient().chat.completions.create({
+      const completion = await openai.chat.completions.create({
         model,
         messages,
         max_tokens: 300,
