@@ -1,11 +1,16 @@
 import OpenAI from "openai";
+import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import { LLMError } from "../types/index.js";
 
-let client: OpenAI | null = null;
+let client: InstanceType<typeof OpenAI> | null = null;
 
-function getClient(): OpenAI {
+function getClient(): InstanceType<typeof OpenAI> {
   if (!client) {
-    client = new OpenAI({
+    client = new (OpenAI as unknown as new (config: {
+      apiKey: string | undefined;
+      baseURL: string;
+      defaultHeaders: Record<string, string>;
+    }) => InstanceType<typeof OpenAI>)({
       apiKey: process.env.OPENROUTER_API_KEY,
       baseURL: "https://openrouter.ai/api/v1",
       defaultHeaders: {
@@ -29,7 +34,7 @@ export async function generate(
   prompt: string,
   context: string,
 ): Promise<string> {
-  const messages: OpenAI.ChatCompletionMessageParam[] = [
+  const messages: ChatCompletionMessageParam[] = [
     {
       role: "system",
       content:
