@@ -12,7 +12,7 @@
     "declarationMap": true,
     "noUncheckedIndexedAccess": true,
     "strict": true,
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": false,
     "isolatedModules": true,
     "skipLibCheck": true
   },
