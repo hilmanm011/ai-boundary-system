@@ -1,5 +1,4 @@
 import OpenAI from "openai";
-import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import { LLMError } from "../types/index.js";
 
 let client: OpenAI | null = null;
@@ -11,7 +10,7 @@ function getClient(): OpenAI {
       baseURL: "https://openrouter.ai/api/v1",
       defaultHeaders: {
         "HTTP-Referer": process.env.BASE_URL || "http://localhost:3001",
-        "X-Title": "AI Boundary System",
+        "X-OpenRouter-Title": "AI Boundary System",
       },
     });
   }
@@ -20,19 +19,21 @@ function getClient(): OpenAI {
 
 const models = [
   "mistralai/mistral-small-2603",
-  "openai/gpt-4o-mini",
-  "qwen/qwen3.5-flash",
+  "openai/gpt-5.4-pro",
+  "qwen/qwen3.5-flash-02-23",
+  "google/gemini-3.1-pro-preview-customtools",
+  "openai/gpt-5.3-codex",
 ];
 
 export async function generate(
   prompt: string,
   context: string,
 ): Promise<string> {
-  const messages: ChatCompletionMessageParam[] = [
+  const messages: OpenAI.ChatCompletionMessageParam[] = [
     {
       role: "system",
       content:
-        "Only use the provided context. Do not hallucinate or use information outside the given context.",
+        "Only use the provided context to answer. Do not hallucinate or use information outside the given context.",
     },
     {
       role: "user",
@@ -40,20 +41,16 @@ export async function generate(
     },
   ];
 
-  const ai = getClient();
-
   for (const model of models) {
     try {
       console.log(`🤖 Trying model: ${model}`);
-
-      const completion = await ai.chat.completions.create({
+      const completion = await getClient().chat.completions.create({
         model,
         messages,
         max_tokens: 300,
       });
 
-      const content = completion.choices?.[0]?.message?.content;
-
+      const content = completion.choices[0]?.message.content;
       if (content) {
         console.log(`✅ Model ${model} responded successfully`);
         return content;
